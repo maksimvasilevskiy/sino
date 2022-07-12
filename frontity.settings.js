@@ -24,7 +24,8 @@ const settings = {
       name: "@frontity/wp-source",
       state: {
         source: {
-          url: "https://test.frontity.org",
+          url: "http://sinowp.beget.tech",
+          homepage: "home-page",
         },
       },
     },

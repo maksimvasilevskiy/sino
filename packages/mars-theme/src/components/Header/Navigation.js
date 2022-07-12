@@ -6,11 +6,11 @@ import drop from "../../assets/images/svg/drop.svg";
 import Link from "../constant/Link";
 
 const Navigation = ({ state, actions }) => {
-  const navLinks = state.theme.menu;
+  const navLinks = state.source.get(`/menu/main-menu/`).items;//state.theme.menu;
   const { selectedMenuItem } = state.theme;
 
   const handleDropdownClick = (menuItem) => {
-    if (!selectedMenuItem || selectedMenuItem.text !== menuItem.text) {
+    if (!selectedMenuItem || selectedMenuItem.title !== menuItem.title) {
       actions.theme.setMenuItem(menuItem);
     } else {
       actions.theme.setMenuItem(null);
@@ -22,11 +22,11 @@ const Navigation = ({ state, actions }) => {
       <List>
         {navLinks &&
           navLinks.map((link) => {
-            if (link.isDropdown) {
+            if (link.child_items) {
               return (
-                <ListItem key={link.text}>
+                <ListItem key={link.title}>
                   <NavButton onClick={() => handleDropdownClick(link)}>
-                    <span>{link.text}</span>
+                    <span>{link.title}</span>
                     <img width="14" height="14" src={drop} alt="drop" />
                   </NavButton>
                 </ListItem>
@@ -34,8 +34,8 @@ const Navigation = ({ state, actions }) => {
             }
 
             return (
-              <ListItem key={link.text}>
-                <NavLink link={link.route}>{link.text}</NavLink>
+              <ListItem key={link.title}>
+                <NavLink link={link.url}>{link.title}</NavLink>
               </ListItem>
             );
           })}

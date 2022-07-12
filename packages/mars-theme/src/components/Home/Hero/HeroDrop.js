@@ -11,8 +11,7 @@ const HeroDrop = ({ state, actions }) => {
   const { selectedMenuItem } = state.theme;
 
   const handleLinkClick = () => {};
-
-  if (!selectedMenuItem || !selectedMenuItem.text) {
+  if (!selectedMenuItem || !selectedMenuItem.title) {
     return null;
   }
 
@@ -30,14 +29,14 @@ const HeroDrop = ({ state, actions }) => {
           {selectedMenuItem.title}
         </Title>
         <List>
-          {selectedMenuItem.dropdown.map((link) => {
-            if (link.isDropdown) {
+          {selectedMenuItem.child_items.map((link) => {
+            if (link.child_items) {
               return (
-                <ListItem key={link.text}>
+                <ListItem key={link.title}>
                   <NavButton
-                    onClick={() => actions.theme.handleNavDropdown(link.text)}
+                    onClick={() => actions.theme.handleNavDropdown(link.title)}
                   >
-                    <span>{link.text}</span>
+                    <span>{link.title}</span>
                     <img
                       style={
                         link.isDropdownOpened
@@ -56,25 +55,25 @@ const HeroDrop = ({ state, actions }) => {
                         ${flex("column")};
                       `}
                     >
-                      {link.dropdown &&
-                        link.dropdown.map((item) => {
-                          if (item.isDropdown) {
+                      {link.child_items &&
+                        link.child_items.map((item) => {
+                          if (item.child_items) {
                             return (
                               <ListItem
                                 css={css`
                                   ${font(18, 30)}
                                 `}
-                                key={item.text}
+                                key={item.title}
                               >
                                 <NavButton
                                   css={css`
                                     ${font(18, 30)}
                                   `}
                                   onClick={() =>
-                                    actions.theme.handleNavDropdown(item.text)
+                                    actions.theme.handleNavDropdown(item.title)
                                   }
                                 >
-                                  <span>{item.text}</span>
+                                  <span>{item.title}</span>
                                   <img
                                     style={
                                       item.isDropdownOpened
@@ -94,11 +93,11 @@ const HeroDrop = ({ state, actions }) => {
                                       ${flex("column")}
                                     `}
                                   >
-                                    {item.dropdown &&
-                                      item.dropdown.map((link) => {
+                                    {item.child_items &&
+                                      item.child_items.map((link) => {
                                         return (
                                           <ListItem
-                                            key={link.text}
+                                            key={link.title}
                                             css={css`
                                               margin-bottom: 4px;
                                               &:last-child {
@@ -112,10 +111,10 @@ const HeroDrop = ({ state, actions }) => {
                                                 font-weight: 300;
                                                 letter-spacing: 0.04em;
                                               `}
-                                              link={link.route}
+                                              link={link.url}
                                               onClick={handleLinkClick}
                                             >
-                                              {link.text}
+                                              {link.title}
                                             </NavLink>
                                           </ListItem>
                                         );
@@ -127,15 +126,15 @@ const HeroDrop = ({ state, actions }) => {
                           }
 
                           return (
-                            <ListItem key={item.text}>
+                            <ListItem key={item.title}>
                               <NavLink
                                 css={css`
                                   ${font(18, 30)}
                                 `}
-                                link={item.route}
+                                link={item.url}
                                 onClick={handleLinkClick}
                               >
-                                {item.text}
+                                {item.title}
                               </NavLink>
                             </ListItem>
                           );
@@ -147,9 +146,9 @@ const HeroDrop = ({ state, actions }) => {
             }
 
             return (
-              <ListItem key={link.text}>
-                <NavLink onClick={handleLinkClick} link={link.route}>
-                  {link.text}
+              <ListItem key={link.title}>
+                <NavLink onClick={handleLinkClick} link={link.url}>
+                  {link.title}
                 </NavLink>
               </ListItem>
             );

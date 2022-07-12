@@ -2,6 +2,7 @@ import Theme from "./components";
 import image from "@frontity/html2react/processors/image";
 import iframe from "@frontity/html2react/processors/iframe";
 import link from "@frontity/html2react/processors/link";
+import menuHandler from "./components/handlers/menu-handler";
 
 const marsTheme = {
   name: "@frontity/mars-theme",
@@ -37,7 +38,9 @@ const marsTheme = {
         showOnPost: false,
       },
       selectedMenuItem: null,
-      menu: [
+      menu: [],
+      menuUrl: "main-menu",
+      /*menu: [
         {
           isDropdown: true,
           isDropdownOpened: false,
@@ -152,7 +155,7 @@ const marsTheme = {
         },
         { text: "Careers", route: "/careers" },
         { text: "Contact", route: "/contact" },
-      ],
+      ],*/
     },
   },
 
@@ -202,10 +205,10 @@ const marsTheme = {
           // Function thet toggles menu dropdowns
           function setDropdown(menuArr, textValue) {
             menuArr.forEach((menuItem) => {
-              if (menuItem.text === textValue && menuItem.isDropdown) {
+              if (menuItem.title === textValue && menuItem.child_items) {
                 menuItem.isDropdownOpened = !menuItem.isDropdownOpened;
-              } else if (menuItem.isDropdown) {
-                setDropdown(menuItem.dropdown, textValue);
+              } else if (menuItem.child_items) {
+                setDropdown(menuItem.child_items, textValue);
               }
             });
           }
@@ -219,9 +222,13 @@ const marsTheme = {
         ({ state }) =>
         (menuItem) => {
           state.theme.selectedMenuItem = Object.assign({}, menuItem);
+          console.log(state.theme.selectedMenuItem);
         },
       handleSwiperStylesLoaded: ({ state }) =>
         (state.theme.swiperStylesLoading = false),
+      beforeSSR: async ({ state, actions }) => {
+        await actions.source.fetch(`/menu/${state.theme.menuUrl}/`);
+      },
     },
   },
   libraries: {
@@ -232,6 +239,9 @@ const marsTheme = {
        * You can add your own processors too.
        */
       processors: [image, iframe, link],
+    },
+    source: {
+      handlers: [menuHandler],
     },
   },
 };
