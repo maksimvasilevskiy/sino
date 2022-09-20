@@ -8,28 +8,21 @@ import { connect, styled } from "frontity";
 import aboutImage from "../../../assets/images/about.png";
 import aboutImage2x from "../../../assets/images/about@2x.png";
 
-const About = ({ state }) => {
+const About = ({ state, post }) => {
   return (
     <ImageSection
       imagePosition="left"
-      image={aboutImage}
-      image2x={aboutImage2x}
+      image={post.acf.home_about_us_image_1x.url}
+      image2x={post.acf.home_about_us_image_2x.url}
       hideImageInMobile={true}
     >
-      <Title marginBottom={24}>About Us</Title>
+      <Title marginBottom={24}>{post.acf.home_about_us_title}</Title>
       <TextWrapper>
-        <p>
-          Our people are our product. This means we&nbsp;don’t own any shipping
-          vessels or&nbsp;aircraft but instead, constantly invest
-          in&nbsp;best-in-class experts who will help your business grow.
-        </p>
-        <p>
-          Learn more about our philosophy and how we&nbsp;continue
-          to&nbsp;deliver on&nbsp;our mission of&nbsp;providing unmatched
-          transportation and/or contract logistics services.
-        </p>
+        {post.acf.home_about_us_text.map((paragraph, i) => {
+          return <p key={'about_us_paragraph' + i}>{paragraph.home_about_us_paragraph}</p>;
+        })}
       </TextWrapper>
-      <PrimaryButton type="link" content="Learn More" link={"/company"} />
+      <PrimaryButton type="link" content={post.acf.home_about_us_link_text} link={post.acf.home_about_us_link_url} />
     </ImageSection>
   );
 };

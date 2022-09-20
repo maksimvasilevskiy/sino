@@ -1,20 +1,19 @@
 import React from "react";
 import { connect, styled, css } from "frontity";
-import { Pagination } from "swiper";
+import { Pagination, Autoplay } from "swiper";
 import { Swiper, SwiperSlide } from "swiper/react/swiper-react.js";
 import { flex, font } from "../../base/functions";
-import Title from "../../constant/Title";
 import Container from "../../constant/Container";
 import Link from "../../constant/Link";
 import DecorativeLine from "../../constant/DecorativeLine";
-import HeroDrop from "./HeroDrop";
+import HeroDrop from "../../constant/HeroDrop";
 
-import hero1 from "../../../assets/images/aerial-view-container-cargo-ship-sea.jpg";
-import hero1_2x from "../../../assets/images/aerial-view-container-cargo-ship-sea@2x.jpg";
-import hero3 from "../../../assets/images/aerial-view-container-cargo-ship.jpg";
-import hero3_2x from "../../../assets/images/aerial-view-container-cargo-ship@2x.jpg";
-import hero2 from "../../../assets/images/hero-image-2.jpg";
-import hero2_2x from "../../../assets/images/hero-image-2@2x.jpg";
+// import hero1 from "../../../assets/images/aerial-view-container-cargo-ship-sea.jpg";
+// import hero1_2x from "../../../assets/images/aerial-view-container-cargo-ship-sea@2x.jpg";
+// import hero3 from "../../../assets/images/aerial-view-container-cargo-ship.jpg";
+// import hero3_2x from "../../../assets/images/aerial-view-container-cargo-ship@2x.jpg";
+// import hero2 from "../../../assets/images/hero-image-2.jpg";
+// import hero2_2x from "../../../assets/images/hero-image-2@2x.jpg";
 
 import youtube from "../../../assets/images/svg/YouTube-white.svg";
 import linkedin from "../../../assets/images/svg/LinkedIn-white.svg";
@@ -44,7 +43,7 @@ const social = [
     link: "https://www.facebook.com/sinologisticscorporation",
   },
 ];
-
+/*
 const heroSlides = [
   {
     id: 1,
@@ -67,35 +66,40 @@ const heroSlides = [
       "The worldwide logistics network is our number one asset, and our vision for sustainable growth within this network is at the core of our business ethos.",
     images: [hero3, hero3_2x],
   },
-];
+];*/
 
-const Hero = ({ state }) => {
+const Hero = ({ state, post }) => {
   const { swiperStylesLoading } = state.theme;
+
+  const heroSlides = post.acf.home_main_slides;
+
+  const social = post.acf.home_main_social_icons;
 
   return (
     <Wrapper>
       {!swiperStylesLoading && (
         <Swiper
-          modules={[Pagination]}
+          modules={[Pagination, Autoplay]}
           loop={true}
           autoplay={{
-            delay: 3000,
+            delay: 5000,
           }}
           pagination={{ clickable: true }}
           onSwiper={(swiper) => console.log(swiper)}
         >
-          {heroSlides.map((slide) => {
-            const [img1x, img2x] = slide.images;
+          {heroSlides.map((slide, index) => {
+            const img1x = slide.home_main_slide_background_1x.url;
+            const img2x = slide.home_main_slide_background_2x.url;
 
             return (
-              <SwiperSlide key={slide.id}>
+              <SwiperSlide key={`hero-slide-${index}`}>
                 <ImageWrapper>
                   <img
                     src={img1x}
                     srcSet={img2x ? `${img1x} 1x, ${img2x} 2x` : ""}
                     alt=""
                   />
-                  {slide.id !== 1 && <div className="dark"></div>}
+                  {index !== 0 && <div className="dark"></div>}
                 </ImageWrapper>
                 <SlideContent>
                   <div
@@ -106,11 +110,11 @@ const Hero = ({ state }) => {
                       }
                     `}
                   >
-                    <Title color="white" size="l">
-                      {slide.title}
-                    </Title>
+                    <HeroTitle color="white">
+                      {slide.home_main_slide_title}
+                    </HeroTitle>
                     <Subtitle>
-                      <p>{slide.subtitle}</p>
+                      <p>{slide.home_main_slide_text}</p>
                     </Subtitle>
                   </div>
                 </SlideContent>
@@ -120,18 +124,25 @@ const Hero = ({ state }) => {
         </Swiper>
       )}
       <SocialBlock>
-        {social.map(({ icon, link }) => {
-          return (
-            <SocialLink
-              target="_blank"
-              rel="noopener noreferrer"
-              link={link}
-              key={link}
-            >
-              <img width="24" height="24" src={icon} alt="social icon" />
-            </SocialLink>
-          );
-        })}
+        {social.map(
+          ({ home_main_social_icon_image, home_main_social_icon_link }) => {
+            return (
+              <SocialLink
+                target="_blank"
+                rel="noopener noreferrer"
+                link={home_main_social_icon_link}
+                key={home_main_social_icon_link}
+              >
+                <img
+                  width="24"
+                  height="24"
+                  src={home_main_social_icon_image.url}
+                  alt="social icon"
+                />
+              </SocialLink>
+            );
+          }
+        )}
         <DecorativeLine
           heightInPercent={56.185567}
           color="white"
@@ -142,6 +153,18 @@ const Hero = ({ state }) => {
     </Wrapper>
   );
 };
+
+const HeroTitle = styled.h1`
+  margin: 0;
+  font-weight: 500;
+  color: ${({ color }) =>
+    color === "white" ? "var(--white)" : "var(--blue-600)"};
+  ${font(64, 72)};
+  max-width: ${({ maxWidth }) => (maxWidth ? `${maxWidth}px` : "none")};
+  @media screen and (max-width: 991px) {
+    ${font(32, 32)};
+  }
+`;
 
 const SocialLink = styled(Link)`
   display: flex;

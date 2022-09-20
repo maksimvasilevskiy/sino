@@ -14,7 +14,9 @@ import groundFreight from "../../../assets/images/ground-freight-service.jpg";
 import warehouse from "../../../assets/images/warehousing-service.jpg";
 import valueAdded from "../../../assets/images/value-added-service.jpg";
 
-const services = [
+import parse from "html-react-parser";
+
+/*const services = [
   {
     title: "Air Freight",
     img: airFreight,
@@ -40,10 +42,14 @@ const services = [
     img: valueAdded,
     link: "/services/value-added",
   },
-];
+];*/
 
-const Services = ({ state, actions }) => {
+const Services = ({ state, actions, post }) => {
   const { isMobile } = state.theme;
+
+  const services = state.source.get(`/services/`).items;
+
+  console.log(services);
 
   return (
     <section className="section">
@@ -58,21 +64,19 @@ const Services = ({ state, actions }) => {
         <Content>
           <Info>
             <Title color="blue" size="m" marginBottom={24}>
-              Our Services
+              {post.acf.home_services_title}
             </Title>
             <Paragraph maxWidth={isMobile ? "none" : "349px"}>
-              We&nbsp;offer solutions that cover all major modes
-              of&nbsp;transportation, and we&nbsp;can arrange any combination
-              of&nbsp;shipping and logistics services to&nbsp;meet your needs.
+              {post.acf.home_services_text}
             </Paragraph>
           </Info>
           {!isMobile &&
             services.map((service) => (
               <Card
-                image={service.img}
-                title={service.title}
+                image={service.fimg_url}
+                title={service.title.rendered ? parse(service.title.rendered) : ''}
                 link={service.link}
-                key={service.title}
+                key={service.title.rendered ? parse(service.title.rendered) : ''}
               />
             ))}
           {isMobile && (
@@ -85,12 +89,11 @@ const Services = ({ state, actions }) => {
             >
               {services.map((service) => {
                 return (
-                  <SwiperSlide key={service.title}>
+                  <SwiperSlide key={service.title.rendered ? service.title.rendered : ''}>
                     <SwiperWrapper>
                       <Card
-                        image={service.img}
-                        title={service.title}
-                        text={service.text}
+                        image={service.fimg_url}
+                        title={service.title.rendered ? parse(service.title.rendered) : ''}
                         link={service.link}
                       />
                     </SwiperWrapper>
@@ -138,30 +141,30 @@ const Content = styled.div`
     }
     & .swiper-pagination {
       bottom: 0;
-    }
-    & .swiper-pagination-bullet {
-      margin: 0;
-      margin-right: 32px;
-      width: 16px;
-      height: 16px;
-      background: transparent;
-      border: 2px solid var(--blue-600);
-      border-radius: 50%;
-      position: relative;
-      opacity: 1;
-      &-active::before {
-        content: "";
-        position: absolute;
+      & .swiper-pagination-bullet {
+        margin: 0;
+        margin-right: 24px;
+        width: 16px;
+        height: 16px;
+        background: transparent;
+        border: 2px solid var(--blue-600);
         border-radius: 50%;
-        width: 6px;
-        height: 6px;
-        background: var(--blue-600);
-        left: 50%;
-        top: 50%;
-        transform: translate(-50%, -50%);
-      }
-      &:last-child {
-        margin-right: 0;
+        position: relative;
+        opacity: 1;
+        &-active::before {
+          content: "";
+          position: absolute;
+          border-radius: 50%;
+          width: 6px;
+          height: 6px;
+          background: var(--blue-600);
+          left: 50%;
+          top: 50%;
+          transform: translate(-50%, -50%);
+        }
+        &:last-child {
+          margin-right: 0;
+        }
       }
     }
     & a {

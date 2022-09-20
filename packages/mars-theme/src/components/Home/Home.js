@@ -7,16 +7,18 @@ import Contact from "./Contact/Contact";
 import Subscribtion from "./Subscribtion/Subscribtion";
 import { connect, styled } from "frontity";
 
-const Home = () => {
+const Home = ({ post }) => {
   return (
+    <>
     <HomeWrapper>
-      <Hero />
-      <Services />
-      <About />
-      <Quote />
-      <Contact />
-      <Subscribtion />
+      <Hero post={post} />
+      <Services post={post} />
+      <About post={post} />
+      <Quote post={post} />
+      <Contact post={post} />
+      <Subscribtion post={post} />
     </HomeWrapper>
+    </>
   );
 };
 

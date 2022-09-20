@@ -25,6 +25,9 @@ const SinoLink = ({ children, ...props }) => {
   const onClick = () => {
     if (state.theme.isMobileMenuOpened) {
       actions.theme.closeMobileMenu();
+      const htmlElement = document.documentElement;
+      console.log('remove("scroll-hidden")')
+      htmlElement.classList.remove("scroll-hidden");
     }
   };
 

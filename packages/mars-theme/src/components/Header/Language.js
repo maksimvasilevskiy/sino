@@ -8,6 +8,12 @@ import { flex, font } from "../base/functions";
 const Language = ({ state, actions }) => {
   const { languages, languageDropdownOpened } = state.theme;
 
+  const handleLanguageChange = (e) => {
+    let link = state.router.link;
+    console.log('language link !!!!')
+    console.log(link)
+  }
+
   return (
     <>
       <div>
@@ -54,7 +60,7 @@ const Language = ({ state, actions }) => {
         </NavButton>
       </div>
       <Dropdown isOpened={languageDropdownOpened}>
-        {languages.map(([lang, value]) => (
+        {languages.map(([lang, value, url]) => (
           <RadioButton
             css={css`
               & .text {
@@ -65,9 +71,10 @@ const Language = ({ state, actions }) => {
             name="language"
             text={`${lang} - ${value}`}
             value={value}
-            onChange={(evt) =>
-              actions.theme.handleLanguageChange(evt.target.value)
-            }
+            onClick={(evt) => {
+              handleLanguageChange(evt);
+            }}
+            url={url + state.router.link}
           />
         ))}
       </Dropdown>

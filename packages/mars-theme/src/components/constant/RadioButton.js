@@ -2,17 +2,23 @@ import React from "react";
 import { styled, useConnect, connect } from "frontity";
 import { flex, font } from "../base/functions";
 
-const RadioButton = ({ name, text, value, onChange, className }) => {
+const RadioButton = ({ name, text, value, url, onChange, className }) => {
   const { state } = useConnect();
+
+  let isThai = false;
+  if (state.source.url === 'https://sino.ux-mind.pro/th') {
+    isThai = true;
+  }
 
   return (
     <Label className={className}>
+      <a href={url}>
       <Input
         type="radio"
         name={name}
         value={value}
         onChange={onChange}
-        checked={state.theme.language === value}
+        checked={(value === 'TH' && isThai) || (value === 'EN' && !isThai)}
       />
       <BtnWrapper>
         <svg
@@ -41,6 +47,7 @@ const RadioButton = ({ name, text, value, onChange, className }) => {
         </svg>
       </BtnWrapper>
       <span className="text">{text}</span>
+      </a>
     </Label>
   );
 };
@@ -78,6 +85,9 @@ const Label = styled.label`
     & circle[data-circle="small"] {
       display: inline-block;
     }
+  }
+  & a {
+    display: flex;
   }
 `;
 

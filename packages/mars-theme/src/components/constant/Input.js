@@ -6,33 +6,42 @@ const PrimaryInput = ({
   type,
   placeholder,
   value,
+  defaultValue,
   onChange,
   name,
-  minWidth,
+  maxWidth,
+  disabled,
+  className,
+  id,
+  ...props
 }) => {
   return (
     <Input
+      id={id || ""}
+      className={className || ""}
       type={type ? type : "text"}
       placeholder={placeholder}
       name={name}
       value={value}
+      defaultValue={defaultValue}
       onChange={onChange}
-      minWidth={minWidth}
+      maxWidth={maxWidth}
+      disabled={disabled}
+      {...props}
     />
   );
 };
 
 const Input = styled.input`
-  width: auto;
   box-sizing: border-box;
   ${font(18, 24)}
   color: var(--black);
   outline: none;
   width: 100%;
-  max-width: ${({ minWidth }) => `${minWidth}`};
+  max-width: ${({ maxWidth }) => (maxWidth ? `${maxWidth}` : "none")};
   border-radius: 8px;
   border: 1px solid var(--blue-600);
-  padding: 0.444em 0.889em;
+  padding: 0.38889em 0.83333em;
   background: var(--white);
   position: relative;
   &::placeholder {

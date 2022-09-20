@@ -3,6 +3,10 @@ import image from "@frontity/html2react/processors/image";
 import iframe from "@frontity/html2react/processors/iframe";
 import link from "@frontity/html2react/processors/link";
 import menuHandler from "./components/handlers/menu-handler";
+import servicesHandler from "./components/handlers/services-handler";
+import newsHandler from "./components/handlers/news-handler";
+import jobsHandler from "./components/handlers/jobs-handler";
+import acfOptionsHandler from "./components/handlers/options-page-handler";
 
 const marsTheme = {
   name: "@frontity/mars-theme",
@@ -24,22 +28,26 @@ const marsTheme = {
       isMobileMenuOpened: false,
       isMobile: false,
       searchValue: "",
-      language: "EN",
+      language: "TH",
       languageDropdownOpened: false,
       languages: [
-        ["English", "EN"],
-        ["Thai", "TH"],
-        ["Deutsch", "DE"],
-        ["Español", "ES"],
-        ["Português", "PT"],
+        ["English", "EN", ""],
+        ["Thai", "TH", "/th"],
       ],
       featured: {
         showOnList: false,
         showOnPost: false,
       },
+      shareModalOpened: false,
+      isAllNewsShown: false,
+      isAllPositionsShown: false,
+      hoveredMenuItem: null,
       selectedMenuItem: null,
+      isAllDirectorsShown: false,
+      recaptchaKey: "6Ldv0GIhAAAAAGkriXBu_jpG_XTl0n_IPwhQDjiO",
       menu: [],
       menuUrl: "main-menu",
+      redirect: '/contact/',
       /*menu: [
         {
           isDropdown: true,
@@ -47,16 +55,16 @@ const marsTheme = {
           title: "Company",
           text: "Company",
           dropdown: [
-            { text: "Our Company", route: "/company/#our-company" },
-            { text: "History", route: "/company/#history" },
-            { text: "Our Vision & Mission", route: "/company/#vision&mission" },
+            { text: "Our Company", route: "/company#our-company" },
+            { text: "History", route: "/company#history" },
+            { text: "Our Vision & Mission", route: "/company#vision&mission" },
             {
               text: "Board of Directors and Executives",
-              route: "/company/#board-of-directors",
+              route: "/company#board-of-directors",
             },
             {
               text: "Organization & Business Structure",
-              route: "/company/#organization&stricture",
+              route: "/company#organization&stricture",
             },
             {
               isDropdown: true,
@@ -65,23 +73,23 @@ const marsTheme = {
               dropdown: [
                 {
                   text: "Business Ethics",
-                  route: "/company/#buisness-ethics",
+                  route: "/company#buisness-ethics",
                 },
                 {
                   text: "Corporate Governance",
-                  route: "/company/#corporate-governance",
+                  route: "/company#corporate-governance",
                 },
                 {
                   text: "Sustainability",
-                  route: "/company/#sustainability",
+                  route: "/company#sustainability",
                 },
                 {
                   text: "Community Engagement",
-                  route: "/company/#community-engagement",
+                  route: "/company#community-engagement",
                 },
                 {
                   text: "People",
-                  route: "/company/#people",
+                  route: "/company#people",
                 },
               ],
             },
@@ -104,16 +112,16 @@ const marsTheme = {
               dropdown: [
                 {
                   text: "FCL",
-                  route: "/services/sea-freight/#FCL",
+                  route: "/services/sea-freight#FCL",
                 },
-                { text: "LCL", route: "/services/sea-freight/#LCL" },
+                { text: "LCL", route: "/services/sea-freight#LCL" },
                 {
                   text: "Consolidation ",
-                  route: "/services/sea-freight/#consolidation",
+                  route: "/services/sea-freight#consolidation",
                 },
                 {
                   text: "Reefer Logistics ",
-                  route: "/services/sea-freight/#reefer-logistics",
+                  route: "/services/sea-freight#reefer-logistics",
                 },
               ],
             },
@@ -132,11 +140,11 @@ const marsTheme = {
               dropdown: [
                 {
                   text: "Custom Brokerage",
-                  route: "/services/value-added/#custom-brokerage",
+                  route: "/services/value-added#custom-brokerage",
                 },
                 {
                   text: "Insurance",
-                  route: "/services/value-added/#insurance",
+                  route: "/services/value-added#insurance",
                 },
               ],
             },
@@ -165,6 +173,9 @@ const marsTheme = {
    */
   actions: {
     theme: {
+      setRedirect: ({ state }) => value => {
+        state.theme.redirect = value;
+      },
       checkIsMobile: ({ state }) => {
         const windowWidth = window.innerWidth;
 
@@ -188,6 +199,30 @@ const marsTheme = {
       handleSearchClear: ({ state }) => {
         state.theme.searchValue = "";
       },
+      handleShareModalOpen: ({ state }) => {
+        state.theme.shareModalOpened = true;
+      },
+      handleShareModalClose:
+        ({ state }) =>
+        (target) => {
+          const isShareModalClicked =
+            target.closest(".share-modal") || target.closest(".share-btn");
+
+          if (isShareModalClicked) {
+            return;
+          }
+
+          state.theme.shareModalOpened = false;
+        },
+      handleNewsShow: ({ state }) => {
+        state.theme.isAllNewsShown = true;
+      },
+      handleNewsToggle: ({ state }) => {
+        state.theme.isAllNewsShown = !state.theme.isAllNewsShown;
+      },
+      handlePositionsShow: ({ state }) => {
+        state.theme.isAllPositionsShown = true;
+      },
       handleLanguageChange:
         ({ state }) =>
         (value) => {
@@ -197,10 +232,23 @@ const marsTheme = {
         state.theme.languageDropdownOpened =
           !state.theme.languageDropdownOpened;
       },
+      toggleDirectors: ({ state }) => {
+        state.theme.isAllDirectorsShown = !state.theme.isAllDirectorsShown;
+      },
       handleNavDropdown:
         ({ state }) =>
         (textValue) => {
-          const newMenu = state.theme.menu.concat();
+          let isThai = false;
+          if (state.source.url === 'https://sino.ux-mind.pro/th') {
+            isThai = true;
+          }
+          let newMenu = [];
+          if (isThai) {
+            newMenu = state.source.get(`/menu/thai-menu/`).items.concat();
+          } else {
+            newMenu = state.source.get(`/menu/main-menu/`).items.concat();            
+          }
+          console.log(newMenu);
 
           // Function thet toggles menu dropdowns
           function setDropdown(menuArr, textValue) {
@@ -215,7 +263,14 @@ const marsTheme = {
 
           setDropdown(newMenu, textValue);
 
-          state.theme.menu = newMenu;
+          //state.theme.menu = newMenu;
+        },
+      clearHoveredItem: ({ state }) => (state.theme.hoveredMenuItem = null),
+      setHoveredItem:
+        ({ state }) =>
+        (menuItem) => {
+          state.theme.hoveredMenuItem = Object.assign({}, menuItem);
+          console.log(state.theme.hoveredMenuItem);
         },
       clearMenuItem: ({ state }) => (state.theme.selectedMenuItem = null),
       setMenuItem:
@@ -227,7 +282,12 @@ const marsTheme = {
       handleSwiperStylesLoaded: ({ state }) =>
         (state.theme.swiperStylesLoading = false),
       beforeSSR: async ({ state, actions }) => {
-        await actions.source.fetch(`/menu/${state.theme.menuUrl}/`);
+        await actions.source.fetch(`/menu/thai-menu/`);
+        await actions.source.fetch(`/menu/main-menu/`);
+        await actions.source.fetch(`/services/`);
+        await actions.source.fetch(`/company-news/`);
+        await actions.source.fetch(`/jobs/`);
+        await actions.source.fetch(`acf-settings`);
       },
     },
   },
@@ -241,7 +301,13 @@ const marsTheme = {
       processors: [image, iframe, link],
     },
     source: {
-      handlers: [menuHandler],
+      handlers: [
+        menuHandler,
+        servicesHandler,
+        jobsHandler,
+        newsHandler,
+        acfOptionsHandler,
+      ],
     },
   },
 };

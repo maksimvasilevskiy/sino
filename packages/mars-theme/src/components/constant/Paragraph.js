@@ -2,13 +2,14 @@ import React from "react";
 import { font } from "../base/functions";
 import { connect, styled, css } from "frontity";
 
-const Paragraph = ({ color, maxWidth, marginBottom, children }) => {
+const Paragraph = ({ color, maxWidth, marginBottom, children, key }) => {
   return (
     <Wrapper
       maxWidth={maxWidth}
       className="paragraph-wrapper"
       mb={marginBottom}
       color={color}
+      key={key}
     >
       <p>{children}</p>
     </Wrapper>

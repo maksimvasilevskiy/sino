@@ -36,29 +36,30 @@ const social = [
   },
 ];
 
-const Footer = () => {
+const Footer = ({ state }) => {
+  const options = state.source.get("acf-settings");
   return (
     <Container>
       <FooterWrapper>
         <Content>
-          <Info />
+          <Info options={options} />
           <LogoBlock>
             <Logo />
             <Social>
-              <p>Follow us</p>
+              <p>{options.acf.footer_social_title}</p>
               <SocialIcons>
-                {social.map(({ icon, link }) => {
+                {options.acf.footer_social_links.map((item) => {
                   return (
                     <SocialLink
                       target="_blank"
                       rel="noopener noreferrer"
-                      link={link}
-                      key={link}
+                      link={item.footer_social_link}
+                      key={item.footer_social_link}
                     >
                       <img
                         width="24"
                         height="24"
-                        src={icon}
+                        src={item.footer_social_icon.url}
                         alt="social icon"
                       />
                     </SocialLink>
@@ -89,29 +90,30 @@ const Footer = () => {
                 />
               </svg>
             </div>
-            <span>Sino Logistics Corporation</span>
+            <span>{options.acf.footer_credits}</span>
           </BottomElement>
           <BottomElement>
-            <TextLink link={"/privacy-policy"}>Privacy Policy</TextLink>
-            <div
-              css={css`
-                ${flex()}
-              `}
-            >
-              <svg
-                width="2"
-                height="14"
-                viewBox="0 0 2 14"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M0.388922 0.0379993H1.60692V13.59H0.388922V0.0379993Z"
-                  fill="#1E1E1E"
-                />
-              </svg>
-            </div>
-            <TextLink link={"/terms-of-use"}>Terms Of Use</TextLink>
+            {options.acf.footer_menu.map((item, i) => {
+              return (
+                <>
+                {(i > 0) ?
+                <svg
+                  width="2"
+                  height="14"
+                  viewBox="0 0 2 14"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                  key={`${item.footer_menu_item_link}-icon`}
+                >
+                  <path
+                    d="M0.388922 0.0379993H1.60692V13.59H0.388922V0.0379993Z"
+                    fill="#1E1E1E"
+                  />
+                </svg> : ''}
+                <TextLink key={item.footer_menu_item_link} link={item.footer_menu_item_link}>{item.footer_menu_item_text}</TextLink>
+                </>
+              );
+            })}
           </BottomElement>
         </BottomContent>
       </FooterWrapper>

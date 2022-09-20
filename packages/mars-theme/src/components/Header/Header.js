@@ -35,11 +35,12 @@ const Header = ({ state, actions }) => {
 export default connect(Header);
 
 const HeaderContainer = styled(Container)`
+  max-height: 124px;
   z-index: 10;
   background: var(--white);
   position: relative;
-  padding-top: 59px;
-  padding-bottom: 32px;
+  padding-top: 46px;
+  padding-bottom: 45px;
   display: grid;
   grid-template-columns: calc((340 / 1372) * 100%) auto calc(
       (116 / 1372) * 100%

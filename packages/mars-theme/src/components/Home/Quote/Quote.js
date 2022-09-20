@@ -8,11 +8,11 @@ import { styled, css, connect } from "frontity";
 import containers from "../../../assets/images/noel-broda-sigzPF1sT7k-unsplash.jpg";
 import containers2x from "../../../assets/images/noel-broda-sigzPF1sT7k-unsplash@2x.jpg";
 
-const Quote = ({ state }) => {
+const Quote = ({ state, post }) => {
   const { isMobile } = state.theme;
 
   return (
-    <div className="section">
+    <section className="section">
       <div
         css={css`
           position: relative;
@@ -30,26 +30,29 @@ const Quote = ({ state }) => {
         </DecorativeLineWrapper>
         <ImageContainer>
           <img
-            src={containers}
-            srcSet={`${containers} 1x, ${containers2x || containers} 2x`}
+            src={post.acf.home_quote_background_1x.url}
+            srcSet={`${post.acf.home_quote_background_1x.url} 1x, ${
+              post.acf.home_quote_background_2x.url ||
+              post.acf.home_quote_background_1x.url
+            } 2x`}
             alt=""
           />
         </ImageContainer>
         <Content>
           <Title size="m" color="white" marginBottom={isMobile ? 24 : 16}>
-            Get a Quote
+            {post.acf.home_quote_title}
           </Title>
           <Subtitle maxWidth={791}>
-            <p>
-              Get in touch with one of our supply chain experts to who can
-              provide you with the best international or domestic shipping
-              rates.
-            </p>
+            <p>{post.acf.home_quote_text}</p>
           </Subtitle>
-          <PrimaryButton content="Request" type="link" link="/get-quote" />
+          <PrimaryButton
+            content={post.acf.home_quote_link_text}
+            type="link"
+            link={post.acf.home_quote_link_url}
+          />
         </Content>
       </div>
-    </div>
+    </section>
   );
 };
 

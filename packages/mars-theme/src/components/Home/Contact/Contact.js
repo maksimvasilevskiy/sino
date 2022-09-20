@@ -7,20 +7,20 @@ import { connect, styled } from "frontity";
 import askImage from "../../../assets/images/alex-starnes-PK_t0Lrh7MM-unsplash.png";
 import askImage2x from "../../../assets/images/alex-starnes-PK_t0Lrh7MM-unsplash@2x.png";
 
-const Contact = ({ state }) => {
+const Contact = ({ state, post }) => {
   const { isMobile } = state.theme;
 
   return (
     <ImageSection
       imagePosition="right"
-      image={askImage}
-      image2x={askImage2x || askImage}
+      image={post.acf.home_ask_image_1x.url}
+      image2x={post.acf.home_ask_image_2x.url || post.acf.home_ask_image_1x.url}
     >
       <Title size="m" color="blue" marginBottom={isMobile ? 32 : 40}>
-        Ask Us Anything
+        {post.acf.home_ask_title}
       </Title>
       <ButtonWrapper>
-        <PrimaryButton type="link" link="/contact" content="Continue" />
+        <PrimaryButton type="link" link={post.acf.home_ask_link_url} content={post.acf.home_ask_link_text} />
       </ButtonWrapper>
     </ImageSection>
   );

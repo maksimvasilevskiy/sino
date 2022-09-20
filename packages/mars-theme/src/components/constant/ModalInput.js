@@ -23,7 +23,7 @@ const Input = styled.input`
   padding: 0.444em 0.889em;
   border: none;
   border-radius: 8px;
-  min-width: ${({ minWidth }) => `${minWidth}`};
+  min-width: ${({ minWidth }) => (minWidth ? `${minWidth}` : "auto")};
   outline: none;
   background: var(--white);
   position: relative;

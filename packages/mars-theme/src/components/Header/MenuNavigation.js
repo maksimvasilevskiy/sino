@@ -6,8 +6,17 @@ import drop from "../../assets/images/svg/drop.svg";
 import Link from "../constant/Link";
 
 const Navigation = ({ state, actions }) => {
-  const navLinks = state.source.get(`/menu/main-menu/`).items;//state.theme.menu;
-  //console.log(navLinks);
+
+  let isThai = false;
+  if (state.source.url === 'https://sino.ux-mind.pro/th') {
+    isThai = true;
+  }
+  let navLinks = [];
+  if (isThai) {
+    navLinks = state.source.get(`/menu/thai-menu`).items;
+  } else {
+    navLinks = state.source.get(`/menu/main-menu`).items;
+  }
 
   const handleLinkClick = () => {
     actions.theme.closeMobileMenu();
@@ -18,7 +27,6 @@ const Navigation = ({ state, actions }) => {
       <List>
         {navLinks &&
           navLinks.map((link) => {
-            console.log(link);
             if (link.child_items) {
               return (
                 <ListItem key={link.title}>
@@ -156,7 +164,7 @@ const Dropdown = styled.div`
 
 const Nav = styled.nav`
   height: 100%;
-  margin-top: 37px;
+  margin-top: 14px;
   margin-bottom: 72px;
 `;
 

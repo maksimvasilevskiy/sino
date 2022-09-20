@@ -2,6 +2,7 @@ import React from "react";
 import Link from "./Link";
 import { styled, css } from "frontity";
 import { font, flex } from "../base/functions";
+import logo from "../../assets/images/logo.png";
 
 const Logo = () => {
   return (
@@ -11,7 +12,13 @@ const Logo = () => {
       `}
     >
       <LogoWrapper link="/">
-        <div className="icon">
+        <img
+          css={css`
+            width: 205px;
+          `}
+          alt="" src={logo}
+        />
+        {/*<div className="icon">
           <svg
             width="32"
             height="33"
@@ -45,7 +52,7 @@ const Logo = () => {
             />
           </svg>
         </div>
-        <span>SINO LOGISTICS</span>
+        <span>SINO LOGISTICS</span>*/}
       </LogoWrapper>
     </div>
   );

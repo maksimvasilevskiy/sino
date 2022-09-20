@@ -10,8 +10,10 @@ const ImageSection = ({
   image2x,
   imagePosition,
   children,
+  isCorporate,
+  id
 }) => {
-  const { state, actions } = useConnect();
+  const { state } = useConnect();
 
   const { isMobile } = state.theme;
 
@@ -27,17 +29,19 @@ const ImageSection = ({
         `
       }
       className="section"
+      id={id}
     >
       <div
         css={css`
           position: relative;
         `}
       >
-        <Container>
+        <ImageSectionContainer isCorporate={isCorporate}>
           <ContentWrapper>
             <ImageWrapper
               position={imagePosition}
               hideImageInMobile={hideImageInMobile}
+              isCorporate={isCorporate}
             >
               <img
                 src={image}
@@ -45,17 +49,27 @@ const ImageSection = ({
                 alt=""
               />
             </ImageWrapper>
-            {!isMobile && <ChildrenWrapper>{children}</ChildrenWrapper>}
+            {!isMobile && (
+              <ChildrenWrapper isCorporate={isCorporate}>
+                {children}
+              </ChildrenWrapper>
+            )}
             {isMobile && <>{children}</>}
           </ContentWrapper>
-        </Container>
+        </ImageSectionContainer>
       </div>
     </div>
   );
 };
 
 const ChildrenWrapper = styled.div`
-  max-width: calc(100% - (((790 / 1372) * 100%) + 64px));
+  max-width: ${({ isCorporate }) =>
+    isCorporate
+      ? `calc(100% - (((674 / 1372) * 100%) + 64px))`
+      : `calc(100% - (((790 / 1372) * 100%) + 64px))`};
+  @media screen and (max-width: 1440px) {
+    ${({ isCorporate }) => isCorporate && `max-width: calc(50% - 32px)`};
+  }
   @media screen and (max-width: 991px) {
     max-width: 100%;
   }
@@ -66,12 +80,22 @@ const ImageWrapper = styled.div`
   max-width: calc((790 / 1372) * 100%);
   & img {
     width: 100%;
+    max-width: 674px;
     height: auto;
     border-radius: 20px;
+  }
+  @media screen and (max-width: 1440px) {
+    ${({ isCorporate }) => isCorporate && `max-width: calc(50% - 32px)`};
   }
   @media screen and (max-width: 991px) {
     ${({ hideImageInMobile }) => (hideImageInMobile ? "display: none;" : "")};
     max-width: 100%;
+  }
+`;
+
+const ImageSectionContainer = styled(Container)`
+  @media screen and (max-width: 576px) {
+    ${({ isCorporate }) => isCorporate && "padding: 0;"}
   }
 `;
 
